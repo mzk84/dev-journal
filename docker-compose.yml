@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gmd_site
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      # Mount a volume for the database file to persist it
+      - gmd_data:/app/gmd-data.db
+      # Mount the deploy key from the host into the container as a secret
+      # IMPORTANT: Update the source path to where you stored the key on your VM
+      - /root/.ssh/gmd_deploy_key:/app/secrets/gmd_deploy_key:ro
+      # Persist the cloned content repo across container restarts
+      - gmd_content:/app/content
+    env_file:
+      - prod.env
+
+volumes:
+  gmd_data:
+  gmd_content:

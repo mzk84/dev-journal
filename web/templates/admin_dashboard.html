@@ -1,0 +1,49 @@
+{{template "layout.html" .}}
+
+{{define "content"}}
+<div class="bg-white p-8 rounded-lg shadow-md">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold">Admin Dashboard</h1>
+        <a href="/admin/logout" class="bg-gray-600 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+            Logout
+        </a>
+    </div>
+
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Path</th>
+                    <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Title</th>
+                    <th class="text-center py-3 px-4 uppercase font-semibold text-sm">Visits</th>
+                    <th class="text-center py-3 px-4 uppercase font-semibold text-sm">Status</th>
+                    <th class="text-center py-3 px-4 uppercase font-semibold text-sm">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="text-gray-700">
+                {{range .Pages}}
+                <tr class="border-b border-gray-200 hover:bg-gray-50">
+                    <td class="text-left py-3 px-4 font-mono">{{.Path}}</td>
+                    <td class="text-left py-3 px-4">{{.Title}}</td>
+                    <td class="text-center py-3 px-4">{{.VisitCount}}</td>
+                    <td class="text-center py-3 px-4">
+                        {{if .IsVisible}}
+                            <span class="bg-green-200 text-green-800 py-1 px-3 rounded-full text-xs">Visible</span>
+                        {{else}}
+                            <span class="bg-red-200 text-red-800 py-1 px-3 rounded-full text-xs">Hidden</span>
+                        {{end}}
+                    </td>
+                    <td class="text-center py-3 px-4">
+                         <form hx-post="/admin/pages/{{.Path}}/toggle" hx-target="body" hx-swap="outerHTML" hx-push-url="true">
+                            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs" style="background-color: {{$.Theme.PrimaryColor}};">
+                                Toggle
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
+</div>
+{{end}}
